@@ -128,6 +128,13 @@ class sqexp3D_covariancef(object):
         return gram_matrix_sq_exp_3D(data, *self.theta)
 
 
+def _raw_gram_matrix(data):
+    if len(data.shape) == 1:
+        return np.outer(data, data)
+    else:
+        return data.dot(data.T)
+
+
 #--------------------------------------
 class linear_covariancef(object):
 #--------------------------------------
@@ -136,15 +143,32 @@ class linear_covariancef(object):
 
     def compute_gram_matrix(self, data):
         betaInvI = np.identity(len(data)) / (self.theta[1]**2)
-        return self.theta[1]**2 * data.T.dot(data) + betaInvI
+        K = _raw_gram_matrix(data)
+        return self.theta[0]**2 * K + betaInvI
 
 
 #--------------------------------------
-class poly_covariancef(object):
+# poly_covariancef factory
 #--------------------------------------
+
+_poly_covariancef_template = \
+"""
+class poly_covariancef_%(DEGREE)d_impl(object):
     def __init__(self, theta):
         self.theta = theta
 
     def compute_gram_matrix(self, data):
-        betaInvI = np.identity(len(data)) / (self.theta[1]**2)
-        return ( data.T.dot(data) + self.theta[0] )**2 + betaInvI
+        t0, t1, t2 = self.theta
+        betaInvI = np.identity(len(data)) / (t2**2)
+        K = _raw_gram_matrix(data)
+        return t0**2*(K + t1) ** %(DEGREE)d + betaInvI
+"""
+
+def poly_covariancef(deg):
+    classname = 'poly_covariancef_%d_impl' % deg
+
+    if classname not in globals():
+        dynamic_code = _poly_covariancef_template % {'DEGREE': deg}
+        exec dynamic_code in globals()
+
+    return globals()[classname]
