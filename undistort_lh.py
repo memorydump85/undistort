@@ -157,8 +157,8 @@ def process(filename, options):
     # homography is local at the center, we only use 5 nearest
     # detections to the center
     #
-    det_i5 = det_i[:5]
-    det_w5 = det_w[:5]
+    det_i9 = det_i[:9]
+    det_w9 = det_w[:9]
 
     from sklearn.cross_validation import LeaveOneOut
     from scipy.optimize import minimize
@@ -172,7 +172,7 @@ def process(filename, options):
     def learn_homography_i2w():
         result = minimize( local_homography_loocv_error,
                     x0=[ 50, 1, 1e-3 ],
-                    args=[ det_i5, det_w5 ],
+                    args=[ det_i9, det_w9 ],
                     method='Powell',
                     options={'ftol': 1e-3} )
 
@@ -184,7 +184,7 @@ def process(filename, options):
         print '  ' + str(result).replace('\n', '\n      ')
 
         H = create_local_homography_object(*result.x)
-        for i, w in zip(det_i5, det_w5):
+        for i, w in zip(det_i9, det_w9):
             H.add_correspondence(i, w)
 
         return H
@@ -193,7 +193,7 @@ def process(filename, options):
         result = minimize( local_homography_loocv_error,
                     x0=[ 0.0254, 1, 1e-3 ],
                     method='Powell',
-                    args=[ det_w5, det_i5 ],
+                    args=[ det_w9, det_i9 ],
                     options={'ftol': 1e-3} )
 
         print '\nHomography: w->i'
@@ -204,7 +204,7 @@ def process(filename, options):
         print '  ' + str(result).replace('\n', '\n      ')
 
         H = create_local_homography_object(*result.x)
-        for w, i in zip(det_w5, det_i5):
+        for w, i in zip(det_w9, det_i9):
             H.add_correspondence(w, i)
 
         return H
@@ -347,7 +347,7 @@ def main():
     parser.add_option("-s", "--scale",
         dest="output_scale", default=1.0,
         help="Scale factor for output image. defaults to 1.0. The output " +
-             "image can be larger than the input image; use this " + 
+             "image can be larger than the input image; use this " +
              "option to control output image cropping.")
 
     options, args = parser.parse_args()
