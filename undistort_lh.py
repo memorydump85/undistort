@@ -93,7 +93,7 @@ class GPModel(object):
             'noise_prec': uniform(0.1, 10)
         }
 
-        for i, sample in enumerate(ParameterSampler(grid, n_iter=100)):
+        for i, sample in enumerate(ParameterSampler(grid, n_iter=500)):
             sys.stdout.write( 'iter: %d/100 evidence: %.4f\r' % (i, best_gp.model_evidence()) )
             sys.stdout.flush()
 
@@ -154,11 +154,11 @@ def process(filename, options):
     # To learn a weighted local homography, we find the weighting
     # function parameters that minimize reprojection error across
     # leave-one-out validation folds of the data. Since the
-    # homography is local at the center, we only use 5 nearest
+    # homography is local at the center, we only use 36 nearest
     # detections to the center
     #
-    det_i9 = det_i[:9]
-    det_w9 = det_w[:9]
+    det_i36 = det_i[:36]
+    det_w36 = det_w[:36]
 
     from sklearn.cross_validation import LeaveOneOut
     from scipy.optimize import minimize
@@ -172,7 +172,7 @@ def process(filename, options):
     def learn_homography_i2w():
         result = minimize( local_homography_loocv_error,
                     x0=[ 50, 1, 1e-3 ],
-                    args=[ det_i9, det_w9 ],
+                    args=[ det_i36, det_w36 ],
                     method='Powell',
                     options={'ftol': 1e-3} )
 
@@ -184,7 +184,7 @@ def process(filename, options):
         print '  ' + str(result).replace('\n', '\n      ')
 
         H = create_local_homography_object(*result.x)
-        for i, w in zip(det_i9, det_w9):
+        for i, w in zip(det_i36, det_w36):
             H.add_correspondence(i, w)
 
         return H
@@ -193,7 +193,7 @@ def process(filename, options):
         result = minimize( local_homography_loocv_error,
                     x0=[ 0.0254, 1, 1e-3 ],
                     method='Powell',
-                    args=[ det_w9, det_i9 ],
+                    args=[ det_w36, det_i36 ],
                     options={'ftol': 1e-3} )
 
         print '\nHomography: w->i'
@@ -204,7 +204,7 @@ def process(filename, options):
         print '  ' + str(result).replace('\n', '\n      ')
 
         H = create_local_homography_object(*result.x)
-        for w, i in zip(det_w9, det_i9):
+        for w, i in zip(det_w36, det_i36):
             H.add_correspondence(w, i)
 
         return H
@@ -241,13 +241,18 @@ def process(filename, options):
     def homogeneous_coords(arr):
         return np.hstack([ arr, np.ones((len(arr), 1)) ])
 
+    subset_step = int(options.subset_step)
+    print '\nUsing every %d-th correspondence for training model ...' % subset_step
+    det_i = det_i[::subset_step]
+    det_w = det_w[::subset_step]
+
     mapped_i = LH0.dot(homogeneous_coords(det_w).T).T
     mapped_i = np.array([ p / p[2] for p in mapped_i ])
     mapped_i = mapped_i[:,:2]
 
     distortion = det_i - mapped_i # image + distortion = mapped
     max_distortion = np.max([np.linalg.norm(u) for u in distortion])
-    print '\nMaximum distortion is %.2f pixels' % max_distortion
+    print '\nMaximum observed distortion is %.2f pixels' % max_distortion
 
     #
     # Fit non-parametric model to the observations
@@ -349,6 +354,13 @@ def main():
         help="Scale factor for output image. defaults to 1.0. The output " +
              "image can be larger than the input image; use this " +
              "option to control output image cropping.")
+
+    parser.add_option("", "--sor-nth",
+        dest="subset_step", default=1,
+        help="Take evey nth correspondence for learning a distortion model." +
+             "Model selection can be done faster on a smaller set " +
+             "of correspondences.")
+
 
     options, args = parser.parse_args()
 
