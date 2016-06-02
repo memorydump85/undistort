@@ -94,7 +94,7 @@ class GPModel(object):
         }
 
         for i, sample in enumerate(ParameterSampler(grid, n_iter=500)):
-            sys.stdout.write( 'iter: %d/100 evidence: %.4f\r' % (i, best_gp.model_evidence()) )
+            sys.stdout.write( 'iter: %d/500 evidence: %.4f\r' % (i, best_gp.model_evidence()) )
             sys.stdout.flush()
 
             theta0 = np.array(( sample['sigmaf'], sample['cov_xx'], sample['cov_yy'], 0, sample['noise_prec']))
@@ -242,7 +242,11 @@ def process(filename, options):
         return np.hstack([ arr, np.ones((len(arr), 1)) ])
 
     subset_step = int(options.subset_step)
-    print '\nUsing every %d-th correspondence for training model ...' % subset_step
+    if subset_step == 1:
+        print '\nUsing all observed correspondences for training model ...'
+    else:
+        print '\nUsing every %d-th observed correspondence for training model ...' % subset_step
+
     det_i = det_i[::subset_step]
     det_w = det_w[::subset_step]
 
@@ -360,7 +364,6 @@ def main():
         help="Take evey nth correspondence for learning a distortion model." +
              "Model selection can be done faster on a smaller set " +
              "of correspondences.")
-
 
     options, args = parser.parse_args()
 
