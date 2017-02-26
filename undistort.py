@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 """
-undistort_lh.py
+undistort.py
 
 Undistort a tag mosaic using locally weighted homographies.
 For a description of the technique please refer:
@@ -143,8 +143,8 @@ def process(filename, options):
     closer_to_center = lambda d1, d2: int(dist(d1.c) - dist(d2.c))
     detections.sort(cmp=closer_to_center)
 
-    from util.tag36h11_mosaic import TagMosaic
-    tag_mosaic = TagMosaic(0.0254)
+    from apriltag.tag_mosaic import Tag36h11Mosaic
+    tag_mosaic = Tag36h11Mosaic(0.0254)
     mosaic_pos = lambda det: tag_mosaic.get_position_meters(det.id)
 
     det_i = np.array([ d.c for d in detections ])
