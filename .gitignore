@@ -1,5 +1,6 @@
 *.png
 *.pyc
+*.pyxbldc
 *.o
 *.table
 *.sublime-workspace
