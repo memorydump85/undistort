@@ -1,3 +1,6 @@
 [submodule "apriltag"]
 	path = apriltag
 	url = git@github.com:memorydump85/py_apriltags.git
+[submodule "mathx"]
+	path = mathx
+	url = git@github.com:memorydump85/mathx.git
