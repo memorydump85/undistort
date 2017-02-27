@@ -1,22 +1,23 @@
-
-
 undistort
 =========
 
 Computes an undistortion table using locally-weighted homographies.
 The method used is described in the following paper:
 
-[_Locally-weighted Homographies for Calibration of Imaging Systems_](http://april.eecs.umich.edu/papers/details.php?name=ranganathan2014iros)<br/>
-Pradeep Ranganathan and Edwin Olson
+> [_Locally-weighted Homographies for Calibration of Imaging Systems_](http://april.eecs.umich.edu/papers/details.php?name=ranganathan2014iros)<br/>
+> Pradeep Ranganathan and Edwin Olson
 
 
 Required python packages
 ------------------------
-`numpy >= 1.9.0` <br/>
-`scipy >= 0.16.1` <br/>
-`scikit-learn >= 0.16.1` <br/>
-`scikit-image >= 0.11.3` <br/>
-`cython >= 0.22.1`
+```
+numpy >= 1.9.0
+scipy >= 0.16.1
+scikit-learn >= 0.16.1
+scikit-image >= 0.11.3
+cython >= 0.22.1
+```
+
 
 How To
 -------
@@ -37,6 +38,7 @@ rectified image `examples/example.fixed.png`.
 
 The produced `.table` file can be used to undistort other images using
 the `examples/render_undistorted.py` script.
+
 
 Notes
 -----
