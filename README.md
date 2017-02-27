@@ -1,3 +1,5 @@
+
+
 undistort
 =========
 
@@ -48,3 +50,7 @@ models.
 
 The file `examples/bad_example.png` is an example of an image that might
 not produce a good distortion model.
+
+The `undistort.py` script also accepts multiple input images on the
+command line. In this case it computes a distortion model using
+tag observations from all the input images.
