@@ -4,7 +4,7 @@ undistort
 =========
 
 Computes an undistortion table using locally-weighted homographies.
-The paper decsribing this method is available:
+The method used is described in the following paper:
 
 [_Locally-weighted Homographies for Calibration of Imaging Systems_](http://april.eecs.umich.edu/papers/details.php?name=ranganathan2014iros)<br/>
 Pradeep Ranganathan and Edwin Olson
