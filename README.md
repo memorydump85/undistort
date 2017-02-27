@@ -27,6 +27,14 @@ Install the required dependencies:
 pip install numpy scipy scikit-learn scikit-image cython
 ```
 
+Clone and build:
+```bash
+git clone --recursive git@github.com:memorydump85/undistort.git
+cd undistort/apriltag
+make
+cd ..
+```
+
 Run the `undistort.py` script. Example:
 ```bash
 ./undistort.py --scale=1.5 examples/example.png
