@@ -110,6 +110,18 @@ class GPModel(object):
         return V + np.tile(self._meanV, (len(X), 1))
 
 
+def img_as_ubyte(im):
+    """
+    Alternative implementation of `skimage.img_as_ubyte` to avoid
+    precision loss warnings.
+    """
+    assert im.dtype != np.uint8
+    assert im.max() <= 1.
+    assert im.min() >= 0.
+
+    return (im * 255).astype(np.uint8)
+
+
 def process(filename, options):
     #
     # Conventions:
@@ -128,7 +140,6 @@ def process(filename, options):
     from skimage.color import rgb2gray
     im = rgb2gray(im)
 
-    from skimage import img_as_ubyte
     im = img_as_ubyte(im)
 
     from apriltag import AprilTagDetector
