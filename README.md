@@ -61,6 +61,8 @@ models.
 The file `examples/bad_example.png` is an example of an image that might
 not produce a good distortion model.
 
-The `undistort.py` script also accepts multiple input images on the
-command line. In this case it computes a distortion model using
-tag observations from all the input images.
+The `undistort.py` script can also use AprilTag observations from multiple
+images. This makes it easier to provide features that cover the entire
+surface of the image. To use multiple images for estimating the distortion
+model just pass multiple input images on the command line to
+`undistort.py`.
