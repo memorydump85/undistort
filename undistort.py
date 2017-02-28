@@ -211,7 +211,7 @@ def process(filename, options):
 
     #
     # We assume that the distortion is zero at the center of
-    # the image and we are interesting in the word to image
+    # the image and we are interested in the world to image
     # homography at the center of the image. However, we don't
     # know the center of the image in world coordinates.
     # So we follow a procedure as explained below:
