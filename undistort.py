@@ -4,7 +4,7 @@
 undistort.py
 
 Undistort a tag mosaic using locally weighted homographies.
-For a description of the technique please refer:
+For a description of the technique please see:
 
     Locally-weighted Homographies for Calibration of Imaging Systems
     Pradeep Ranganathan & Edwin Olson
