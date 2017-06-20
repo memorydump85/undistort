@@ -84,7 +84,7 @@ class GPModel(object):
         from gp import GaussianProcess, sqexp2D_covariancef
         best_gp = GaussianProcess.fit(X, t, sqexp2D_covariancef, theta0)
 
-        from sklearn.grid_search import ParameterSampler
+        from sklearn.model_selection import ParameterSampler
         from scipy.stats import uniform
         grid = {
             'sigmaf': uniform(0.1*t.std(), 10*t.std()),
@@ -171,13 +171,13 @@ def process(filename, options):
     det_i36 = det_i[:36]
     det_w36 = det_w[:36]
 
-    from sklearn.cross_validation import LeaveOneOut
+    from sklearn.model_selection import LeaveOneOut
     from scipy.optimize import minimize
 
     def local_homography_loocv_error(theta, args):
         src, tgt = args
         errs = [ local_homography_error(theta, src[t_ix], tgt[t_ix], src[v_ix], tgt[v_ix])
-                    for t_ix, v_ix in LeaveOneOut(len(src)) ]
+                    for t_ix, v_ix in LeaveOneOut().split(range(len(src))) ]
         return np.mean(errs)
 
     def learn_homography_i2w():
