@@ -47,6 +47,31 @@ rectified image `examples/example.fixed.png`.
 The produced `.table` file can be used to undistort other images using
 the `examples/render_undistorted.py` script.
 
+Running the code using Docker
+----
+Using the following `undistort.Dockerfile`:
+```docker
+FROM ubuntu:16.04
+
+RUN \
+  apt-get update && \
+  apt -y install build-essential  pkg-config git python python-pip python-numpy && \
+  pip install numpy scipy scikit-learn scikit-image cython && \
+  cd /root && \
+  git clone --recursive https://github.com/memorydump85/undistort.git && \
+  cd /root/undistort/apriltag && \
+  make -j
+```
+build a docker image and run an interactive container using that image:
+```bash
+docker build -t undistort -f undistort.Dockerfile
+docker run -it undistort
+```
+Then, run the `undistort.py` script inside the container:
+```bash
+cd /root/undistort
+./undistort.py --scale=1.5 examples/example.png
+```
 
 Notes
 -----
