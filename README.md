@@ -56,7 +56,8 @@ FROM ubuntu:16.04
 RUN \
   apt-get update && \
   apt -y install build-essential  pkg-config git python python-pip python-numpy && \
-  pip install numpy scipy scikit-learn scikit-image cython && \
+  python -m pip -U pip && \
+  pip install -U numpy scipy scikit-learn scikit-image cython && \
   cd /root && \
   git clone --recursive https://github.com/memorydump85/undistort.git && \
   cd /root/undistort/apriltag && \
