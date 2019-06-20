@@ -47,32 +47,28 @@ rectified image `examples/example.fixed.png`.
 The produced `.table` file can be used to undistort other images using
 the `examples/render_undistorted.py` script.
 
-Running the code using Docker
-----
-Using the following `undistort.Dockerfile`:
-```docker
-FROM ubuntu:16.04
 
-RUN \
-  apt-get update && \
-  apt -y install build-essential  pkg-config git python python-pip python-numpy && \
-  python -m pip install -U pip && \
-  pip install -U numpy scipy scikit-learn scikit-image cython && \
-  cd /root && \
-  git clone --recursive https://github.com/memorydump85/undistort.git && \
-  cd /root/undistort/apriltag && \
-  make -j
-```
-build a docker image and run an interactive container using that image:
+Running the code using Docker
+-----------------------------
+
+Use the provided `Dockerfile` to build a docker image and run this code
+inside it.
 ```bash
-docker build -t undistort -f undistort.Dockerfile
-docker run -it undistort
+docker build -t undistort .
+docker run --rm -it \
+    undistort /code/undistort.py --scale=1.5 /code/examples/example.png
 ```
-Then, run the `undistort.py` script inside the container:
-```bash
-cd /root/undistort
-./undistort.py --scale=1.5 examples/example.png
+
+The command above writes the output files to the container's internal
+filesystem, which is not easily accessible from the host. One way to
+work around this is to mount the host `examples` folder into the
+container.
 ```
+docker run --rm -it                       \
+    -v $PWD/examples/:/code/examples/     \
+    undistort /code/undistort.py --scale=1.5 /code/examples/example.png
+```
+
 
 Notes
 -----
@@ -86,4 +82,3 @@ models.
 
 The file `examples/bad_example.png` is an example of an image that might
 not produce a good distortion model.
-

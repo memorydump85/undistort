@@ -3,7 +3,7 @@ from numpy.linalg import solve, slogdet
 from scipy import optimize
 
 import pyximport; pyximport.install()
-from gram_matrix import *
+from .gram_matrix import *
 
 
 
@@ -169,6 +169,6 @@ def poly_covariancef(deg):
 
     if classname not in globals():
         dynamic_code = _poly_covariancef_template % {'DEGREE': deg}
-        exec dynamic_code in globals()
+        exec(dynamic_code, globals())
 
     return globals()[classname]
