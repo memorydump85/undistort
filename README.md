@@ -8,48 +8,8 @@ The method used is described in:
 > Pradeep Ranganathan and Edwin Olson
 
 
-Required python packages
-------------------------
-```
-numpy >= 1.9.0
-scipy >= 0.16.1
-scikit-learn >= 0.16.1
-scikit-image >= 0.11.3
-cython >= 0.22.1
-```
-
-
-How To
--------
-
-Install the required dependencies:
-```bash
-pip install numpy scipy scikit-learn scikit-image cython
-```
-
-Clone and build:
-```bash
-git clone --recursive git@github.com:memorydump85/undistort.git
-cd undistort/apriltag
-make
-cd ..
-```
-
-Run the `undistort.py` script. Example:
-```bash
-./undistort.py --scale=1.5 examples/example.png
-```
-
-This runs the undistortion script on the `examples/example.png` and
-produces the undistortion table `examples/example.png.table` and
-rectified image `examples/example.fixed.png`.
-
-The produced `.table` file can be used to undistort other images using
-the `examples/render_undistorted.py` script.
-
-
-Running the code using Docker
------------------------------
+Quickstart with Docker
+----------------------
 
 Use the provided `Dockerfile` to build a docker image and run this code
 inside it.
@@ -68,6 +28,13 @@ docker run --rm -it                       \
     -v $PWD/examples/:/code/examples/     \
     undistort /code/undistort.py --scale=1.5 /code/examples/example.png
 ```
+
+This command runs the undistortion script on the `examples/example.png`
+and produces the undistortion table `examples/example.png.table` and
+rectified image `examples/example.fixed.png`.
+
+The produced `.table` file can be used to undistort other images using
+the `examples/render_undistorted.py` script.
 
 
 Notes
